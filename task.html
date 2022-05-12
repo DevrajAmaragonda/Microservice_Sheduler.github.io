@@ -1,0 +1,132 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TASK</title>
+    
+<link rel="stylesheet" href="/Users/mrpixels/Spacex/css/task.css">
+    <link rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+  <body style="padding: 100px; background-color: antiquewhite;">
+
+
+<div class="container">
+    <div class=" text-center mt-5 ">
+
+        <h1 >Shedule Your Task</h1>
+        <hr>
+        
+    </div>
+
+       
+
+<div class="row ">
+  <div class="col-lg-7 mx-auto">
+    <div class="card mt-2 mx-auto p-4 bg-light">
+        <div class="card-body bg-light">
+   
+        <div class = "container">
+                         <form id="contact-form" role="form">
+
+        
+    
+        <div class="controls">
+
+            <div class="coc-form" style="margin: 0 0 20px;">
+                <div class="coc-block-row">
+                  <label class="coc-block-label" for="dateofbirth">Select Date*</label>
+                  <div class="coc-block">
+                    <input class="coc-input" type="date" name="dateofbirth" id="dateofbirth">
+                  </div>
+                </div>
+              </div>
+              <br>
+           
+              <div class="col-md-6" >
+                <div class="form-group" >
+                    <label for="form_need">Day of The Week *</label>
+                    <select id="form_need" name="need" class="form-control" required="required" data-error="Please specify your need.">
+                        <option value="" selected disabled>--Select the day--</option>
+                        <option >Sunday</option>
+                        <option >Monday</option>
+                        <option >Tuesday</option>
+                        <option >wednesday</option>
+                        <option >Thursday</option>
+                        <option >Friday</option>
+                        <option >Saturday</option>
+                    </select>
+                      </div>
+            </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="form_name">Task Name *</label>
+                        <input id="form_name" type="text" name="name" class="form-control" placeholder="" required="required" data-error="Firstname is required.">
+                        
+                    </div>
+                </div>
+                
+               
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="form_email">Start Time *</label>
+                        <input id="form_email" type="time" id="appt" name="appt"class="form-control"  required="required" >
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="form_email">EndTime *</label>
+                        <input id="form_email" type="email" name="email" class="form-control" placeholder="Please enter your email *" required="required" data-error="Valid email is required.">
+                        
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="form_need">category *</label>
+                        <select id="form_need" name="need" class="form-control" required="required" data-error="Please specify your need.">
+                            <option value="" selected disabled>--Task--</option>
+                            <option >Official</option>
+                            <option >Daily Habit</option>
+                            <option >Must Do</option>
+                            <option >Other</option>
+                        </select>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="form_message">Describe your task *</label>
+                        <textarea id="form_message" name="message" class="form-control" placeholder="Write your message here." rows="4" required="required" data-error="Please, leave us a message."></textarea
+                            >
+                        </div>
+
+                    </div>
+
+
+                <div class="col-md-12">
+                    
+            
+                    <div  class="btn btn-warning" onclick="location.href='/Users/mrpixels/Spacex/Shedule-Events.html'">Submit the task
+            </div>
+      
+            </div>
+
+
+    </div>
+     </form>
+    </div>
+        </div>
+
+
+      </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
