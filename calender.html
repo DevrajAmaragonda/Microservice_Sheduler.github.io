@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>JavaScript Scheduler: Zoom</title>
+
+  <style type="text/css">
+    p, body, td { font-family: Tahoma, Arial, Helvetica, sans-serif; font-size: 10pt; }
+    body { padding: 0px; margin: 0px; background-color: #ffffff; }
+    a { color: #1155a3; }
+    .space { margin: 10px 0px 10px 0px; }
+    .header { background: #003267; background: linear-gradient(to right, #011329 0%,#00639e 44%,#011329 100%); padding:20px 10px; color: white; box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.75); }
+    .header a { color: white; }
+    .header h1 a { text-decoration: none; }
+    .header h1 { padding: 0px; margin: 0px; }
+    .main { padding: 10px }
+    .generated { color: #999; }
+    .generated a { color: #999; }
+  </style>
+
+  <style type="text/css">
+    .controls {
+      margin: 10px 0px;
+      display: flex;
+      align-items: center;
+    }
+    .controls input[type=range] {
+      width: 80px;
+      margin: 0px 5px;
+    }
+    .controls button {
+      width: 25px;
+      height: 25px;
+
+      background-color: #3c78d8;
+      color: white;
+      border: 0;
+      cursor: pointer;
+    }
+    .controls button:focus {
+      outline: none;
+    }
+    #label {
+      display: inline-block;
+      margin-left: 10px;
+    }
+  </style>
+
+  <!-- DayPilot library -->
+  <script src="js/daypilot/daypilot-all.min.js"></script>
+</head>
+<body>
+<div class="header">
+  <h1><a href='https://code.daypilot.org/32893/javascript-scheduler-zoom'>JavaScript Scheduler: Zoom</a></h1>
+  <div><a href="https://javascript.daypilot.org/">DayPilot for JavaScript</a> - HTML5 Calendar/Scheduling Components for JavaScript/Angular/React</div>
+</div>
+
+<div class="main">
+
+  <div class="controls">
+    <button id="minus">-</button>
+    <input type="range" min="0" max="3" step="1" id="zoom-level" value="0" />
+    <button id="plus">+</button>
+    <span id="label"></span>
+  </div>
+
+  <div id="dp"></div>
+  <div class="generated">Generated using <a href="https://builder.daypilot.org/">DayPilot UI Builder</a>.</div>
+</div>
+
+<script>
+  const elements = {
+    label: document.getElementById("label"),
+    range: document.getElementById("zoom-level"),
+    plus: document.getElementById("plus"),
+    minus: document.getElementById("minus"),
+  };
+
+  const dp = new DayPilot.Scheduler("dp", {
+    onTimeRangeSelected: async (args) => {
+      const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
+      dp.clearSelection();
+      if (modal.canceled) {
+        return;
+      }
+      dp.events.add({
+        start: args.start,
+        end: args.end,
+        id: DayPilot.guid(),
+        resource: args.resource,
+        text: modal.result
+      });
+    },
+    treeEnabled: true,
+  });
+  dp.resources = [
+    {name: "Resource 1", id: "R1"},
+    {name: "Resource 2", id: "R2"},
+    {name: "Resource 3", id: "R3"},
+    {name: "Resource 4", id: "R4"},
+    {name: "Resource 5", id: "R5"},
+    {name: "Resource 6", id: "R6"},
+    {name: "Resource 7", id: "R7"},
+    {name: "Resource 8", id: "R8"},
+  ];
+  dp.events.list = [];
+
+  dp.zoomPosition = "middle";
+  dp.zoomLevels = [
+    {
+      name: "Year",
+      properties: {
+        scale: "Day",
+        cellWidth: 40,
+        timeHeaders: [{groupBy: "Year"}, {groupBy: "Month", format: "MMMM"}, {groupBy: "Day", format: "d"}],
+        startDate: args => args.date.firstDayOfYear(),
+        days: args => args.date.daysInYear(),
+      }
+    },
+    {
+      name: "Month",
+      properties: {
+        scale: "CellDuration",
+        cellDuration: 720,
+        cellWidth: 40,
+        timeHeaders: [{groupBy: "Month"}, {groupBy: "Day", format: "ddd d"}, {groupBy: "Cell", format: "tt"}],
+        startDate: args => args.date.firstDayOfMonth(),
+        days: args => args.date.daysInMonth(),
+      }
+    },
+    {
+      name: "Week",
+      properties: {
+        scale: "Hour",
+        cellWidth: 40,
+        timeHeaders: [{groupBy: "Month"}, {groupBy: "Day", format: "dddd d"}, {groupBy: "Hour"}],
+        startDate: args => args.date.firstDayOfWeek(),
+        days: args => 7,
+      }
+    },
+    {
+      name: "Hour",
+      properties: {
+        scale: "CellDuration",
+        cellDuration: 15,
+        cellWidth: 40,
+        timeHeaders: [{groupBy: "Day", format: "dddd MMMM d, yyyy"}, {groupBy: "Hour"}, {groupBy: "Cell"}],
+        startDate: args => args.date.getDatePart(),
+        days: args => 1,
+      }
+    },
+  ];
+
+  // make sure the default zoom level is set before dp.init()
+  init();
+
+  dp.init();
+
+  function init() {
+    elements.range.addEventListener("input", ev => {
+      const val = parseInt(elements.range.value);
+      applyLevel(val);
+    });
+
+    elements.plus.addEventListener("click", ev => {
+      let value = parseInt(elements.range.value);
+      if (value < dp.zoomLevels.length - 1) {
+        value += 1;
+        applyLevel(value);
+      }
+    });
+
+    elements.minus.addEventListener("click", ev=> {
+      let value = parseInt(elements.range.value);
+      if (value > 0) {
+        value -= 1;
+        applyLevel(value);
+      }
+    });
+
+    // make sure the "range" and "label" elements match the current level
+    applyLevel(0);
+  }
+
+  function applyLevel(index, date) {
+    dp.zoom.setActive(index);
+    elements.range.value = index;
+    elements.label.innerText = "Current zoom level: " + dp.zoomLevels[index].name;
+  }
+
+</script>
+
+</body>
+</html>
